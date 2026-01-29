@@ -50,7 +50,7 @@ backend:
   #   memory: 128Mi
 
   ingress:
-    enabled: false
+    enabled: true
     className: ""
     annotations: 
       kubernetes.io/ingress.class: nginx
@@ -80,8 +80,8 @@ frontend:
     tag: latest
   
   service:
-    type: ClusterIP
-    port: 3000
+    type: LoadBalancer
+    port: 1337
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -141,7 +141,7 @@ securityContext: {}
   # runAsUser: 1000
 
 ingress:
-  enabled: false
+  enabled: true
   className: ""
   annotations: 
     kubernetes.io/ingress.class: nginx
