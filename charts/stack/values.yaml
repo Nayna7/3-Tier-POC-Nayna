@@ -28,7 +28,7 @@ database:
 
 backend:
   image:
-    repository: strapi/strapi
+    repository: nayna9/backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "3.6.8-alpine"
@@ -50,7 +50,7 @@ backend:
   #   memory: 128Mi
 
   ingress:
-    enabled: true
+    enabled: false
     className: ""
     annotations: 
       kubernetes.io/ingress.class: nginx
@@ -74,7 +74,7 @@ backend:
 
 frontend:
   image:
-    repository: nginx
+    repository: nayna9/frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -96,7 +96,7 @@ frontend:
     #   memory: 128Mi
 
   ingress:
-    enabled: true
+    enabled: false
     className: ""
     annotations: 
       kubernetes.io/ingress.class: nginx
@@ -141,7 +141,7 @@ securityContext: {}
   # runAsUser: 1000
 
 ingress:
-  enabled: true
+  enabled: false
   className: ""
   annotations: 
     kubernetes.io/ingress.class: nginx
