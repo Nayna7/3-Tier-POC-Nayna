@@ -31,7 +31,7 @@ backend:
     repository: nayna9/backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.6.8-alpine"
+    tag: latest
   
   service:
     type: ClusterIP
@@ -77,7 +77,7 @@ frontend:
     repository: nayna9/frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: latest
   
   service:
     type: ClusterIP
