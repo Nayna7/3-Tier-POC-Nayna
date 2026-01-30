@@ -1,18 +1,48 @@
-{{- if .Values.database.enabled }}
-apiVersion: "acid.zalan.do/v1"
-kind: postgresql
+apiVersion: v1
+kind: Service
 metadata:
   name: {{ include "stack.database.fullname" . }}
   labels:
     {{- include "stack.database.labels" . | nindent 4 }}
 spec:
-  teamId: {{ include "stack.database.teamId" . }}
-  volume:
-    size: {{ .Values.database.size | default "1Gi" }}
-  numberOfInstances: {{ .Values.database.instances | default 2 }}
-  users: {{ toYaml .Values.database.users | nindent 6 }}
-  databases: {{ toYaml .Values.database.databases | nindent 4 }}
-  preparedDatabases: {{ toYaml .Values.database.preparedDatabases | nindent 4 }}
-  postgresql:
-    version: "14"
-{{- end }}
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: {{ include "stack.database.fullname" . }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "stack.database.fullname" . }}
+  labels:
+    {{- include "stack.database.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "stack.database.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "stack.database.fullname" . }}
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRES_DB
+              value: "db"
+            - name: POSTGRES_USER
+              value: "admin"
+            - name: POSTGRES_PASSWORD
+              value: "admin"
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-data
+          emptyDir: {}
