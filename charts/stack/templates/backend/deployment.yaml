@@ -53,17 +53,17 @@ spec:
             {{- toYaml .Values.backend.resources | nindent 12 }}
           env:
             - name: DATABASE_HOST
-              value: {{ (lookup "v1" "Service" "default" (include "stack.database.fullname" .)).spec.clusterIP | quote }}
+              value: {{ include "stack.database.fullname" . }}
             - name: DATABASE_PORT
               value: "5432"
             - name: DATABASE_NAME
               value: "db"
             - name: DATABASE_USERNAME
-              value: {{ (lookup "v1" "Secret" "default" (printf "backend-user.%s.credentials.postgresql.acid.zalan.do" (include "stack.database.fullname" .) ) ).data.username | b64dec | quote }}
+              value: "admin"
             - name: DATABASE_PASSWORD
-              value: {{ (lookup "v1" "Secret" "default" (printf "backend-user.%s.credentials.postgresql.acid.zalan.do" (include "stack.database.fullname" .) ) ).data.password | b64dec | quote }}
+              value: "admin"
             - name: DATABASE_SSL
-              value: "true"
+              value: "false"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
