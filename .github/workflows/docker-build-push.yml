@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - "backend/**"
-      - "frontend/**"
-      - "Dockerfile"
+      - "apps/backend/**"
+      - "apps/frontend/**"
+      - "apps/Dockerfile"
       - ".github/workflows/ci-docker.yml"
 
 jobs:
