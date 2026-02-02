@@ -5,75 +5,43 @@ metadata:
   labels:
     {{- include "stack.backend.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.backend.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "stack.backend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "stack.backend.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "stack.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
-
-      # --- Wait for Postgres to be ready before starting backend ---
-      initContainers:
-        - name: wait-for-postgres
-          image: busybox:1.34
-          command:
-            [
-              "sh",
-              "-c",
-              "until nc -z -v -w30 {{ .Values.postgres.host | default 'stack-stack-postgres' }} {{ .Values.postgres.port }}; do echo 'Waiting for Postgres...'; sleep 5; done;"
-            ]
 
       containers:
         - name: backend
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "stack.backend.image" . }}
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
             - name: backend
               containerPort: {{ .Values.backend.service.port }}
               protocol: TCP
+
+          env:
+            - name: DATABASE_CLIENT
+              value: "postgres"
+            - name: DATABASE_HOST
+              value: "stack-stack-postgres"
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_NAME
+              value: "mydb"
+            - name: DATABASE_USERNAME
+              value: "admin"
+            - name: DATABASE_PASSWORD
+              value: "admin"
+            - name: DATABASE_SSL
+              value: "false"
+            - name: DATABASE_SSL_REJECT_UNAUTHORIZED
+              value: "false"
+
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
-          env:
-            - name: DATABASE_HOST
-              value: "{{ .Values.postgres.host | default 'stack-stack-postgres' }}"
-            - name: DATABASE_PORT
-              value: "{{ .Values.postgres.port }}"
-            - name: DATABASE_NAME
-              value: "{{ .Values.postgres.database }}"
-            - name: DATABASE_USERNAME
-              value: "{{ .Values.postgres.username }}"
-            - name: DATABASE_PASSWORD
-              value: "{{ .Values.postgres.password }}"
-            - name: DATABASE_SSL
-              value: '{{ .Values.postgres.ssl | default "false" }}'
-
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
