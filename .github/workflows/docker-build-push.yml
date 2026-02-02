@@ -19,8 +19,8 @@ jobs:
 
       - name: Build & Push Images
         run: |
-          docker build -t nayna9/backend:latest ./backend
+          docker build -t nayna9/backend:latest ./apps//backend
           docker push nayna9/backend:latest
 
-          docker build -t nayna9/frontend:latest ./frontend
+          docker build -t nayna9/frontend:latest ./apps/frontend
           docker push nayna9/frontend:latest
