@@ -2,9 +2,8 @@ name: CD - Helm Deploy to AKS
 
 on:
   push:
-    paths:
-      - "charts/stack/**"
-      - ".github/workflows/cd-aks-helm.yml"
+    branches:
+      - main
 
 jobs:
   deploy:
