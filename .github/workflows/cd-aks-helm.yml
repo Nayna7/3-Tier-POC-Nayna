@@ -1,19 +1,17 @@
-name: CD - Deploy to AKS using Helm
+name: CD - Helm Deploy to AKS
 
 on:
-  workflow_run:
-    workflows: ["docker-build-push.yml"]
-    types:
-      - completed
+  push:
+    paths:
+      - "stack/**"
+      - ".github/workflows/cd-aks-helm.yml"
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Azure Login
         uses: azure/login@v2
@@ -31,16 +29,14 @@ jobs:
 
       - name: Install Helm
         uses: azure/setup-helm@v4
-        with:
-          version: v3.14.0
 
-      - name: Create namespace if not exists
+      - name: Create namespace
         run: |
           kubectl create namespace stack --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Helm Deploy (CD only)
+      - name: Helm Deploy
         run: |
-          helm upgrade --install stack-app ./stack \
+          helm upgrade --install stack ./stack \
             --namespace stack \
             --values ./stack/values.yaml \
             --wait
