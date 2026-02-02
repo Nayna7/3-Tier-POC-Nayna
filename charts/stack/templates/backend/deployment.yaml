@@ -55,15 +55,15 @@ spec:
             - name: DATABASE_HOST
               value: {{ include "stack.postgres.fullname" . }}
             - name: DATABASE_PORT
-              value: "5432"
+              value: "{{ .Values.postgres.port }}"
             - name: DATABASE_NAME
-              value: "db"
+              value: "{{ .Values.postgres.database }}"
             - name: DATABASE_USERNAME
-              value: "admin"
+              value: "{{ .Values.postgres.username }}"
             - name: DATABASE_PASSWORD
-              value: "admin"
+              value: "{{ .Values.postgres.password }}"
             - name: DATABASE_SSL
-              value: "false"
+              value: "{{ .Values.postgres.ssl | default "false" }}"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
