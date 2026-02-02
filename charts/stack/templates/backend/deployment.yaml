@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: backend
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "stack.backend.image" . }}
@@ -37,23 +37,11 @@ spec:
             - name: backend
               containerPort: {{ .Values.backend.service.port }}
               protocol: TCP
-          livenessProbe:
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            httpGet:
-              path: /
-              port: backend
-          readinessProbe:
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            httpGet:
-              path: /
-              port: backend
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
           env:
             - name: DATABASE_HOST
-              value: {{ include "stack.postgres.fullname" . }}
+              value: "stack-postgres"
             - name: DATABASE_PORT
               value: "{{ .Values.postgres.port }}"
             - name: DATABASE_NAME
@@ -63,7 +51,7 @@ spec:
             - name: DATABASE_PASSWORD
               value: "{{ .Values.postgres.password }}"
             - name: DATABASE_SSL
-              value: "{{ .Values.postgres.ssl | default "false" }}"
+              value: "false"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
