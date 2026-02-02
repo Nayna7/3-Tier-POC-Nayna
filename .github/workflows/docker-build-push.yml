@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "apps/backend/**"
-      - "apps/frontend/**"
-      - "apps/Dockerfile"
-      - ".github/workflows/ci-docker.yml"
-
 jobs:
   build:
     runs-on: ubuntu-latest
