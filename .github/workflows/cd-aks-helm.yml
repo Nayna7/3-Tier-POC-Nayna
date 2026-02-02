@@ -24,7 +24,7 @@ jobs:
           resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
 
-      - name: Install Helm
+      - name: Install Helm   
         uses: azure/setup-helm@v4
 
       - name: Create namespace
@@ -33,7 +33,8 @@ jobs:
 
       - name: Helm Deploy
         run: |
-          helm upgrade --install stack ./stack \
+          helm upgrade --install stack ./charts/stack \
             --namespace stack \
-            --values ./stack/values.yaml \
+            --values ./charts/stack/values.yaml \
             --wait
+
