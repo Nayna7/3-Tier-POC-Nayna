@@ -30,6 +30,20 @@ jobs:
         run: |
           kubectl create namespace stack --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Cleanup stuck Helm release (if any)
+        run: |
+          if helm status stack -n stack >/dev/null 2>&1; then
+            echo "Helm release 'stack' exists. Checking for stuck operations..."
+            if helm status stack -n stack | grep -q "pending"; then
+              echo "Release is pending, deleting lock..."
+              helm history stack -n stack
+              # Delete Helm release lock safely
+              helm uninstall stack -n stack || echo "No release to uninstall"
+            fi
+          else
+            echo "No existing release found, proceeding with install."
+          fi
+
       - name: Helm Deploy
         run: |
           helm upgrade --install stack ./charts/stack \
