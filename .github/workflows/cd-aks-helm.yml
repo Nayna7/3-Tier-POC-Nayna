@@ -44,9 +44,11 @@ jobs:
             echo "No existing release found, proceeding with install."
           fi
 
-      - name: Helm Deploy
+      - name: Helm Deploy with timeout and atomic
         run: |
           helm upgrade --install stack ./charts/stack \
             --namespace stack \
             --values ./charts/stack/values.yaml \
-            --wait
+            --wait \
+            --timeout 15m \
+            --atomic
