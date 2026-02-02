@@ -17,6 +17,7 @@ postgres:
   username: admin
   password: admin
   port: 5432
+  ssl: false                  # must be boolean false, not string
 
 # =========================
 # BACKEND
