@@ -32,7 +32,7 @@ backend:
     port: 1337
 
   env:
-    DATABASE_HOST: stack-postgres
+    DATABASE_HOST: stack-stack-postgres
     DATABASE_PORT: "5432"
     DATABASE_NAME: mydb
     DATABASE_USERNAME: admin
