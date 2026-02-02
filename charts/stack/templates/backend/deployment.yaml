@@ -28,22 +28,16 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
-      # =========================
-      # Wait for Postgres to be ready
-      # =========================
+      # --- Wait for Postgres to be ready before starting backend ---
       initContainers:
         - name: wait-for-postgres
-          image: busybox
+          image: busybox:1.34
           command:
-            - sh
-            - -c
-            - |
-              echo "Waiting for Postgres to be ready..."
-              while ! nc -z {{ .Values.postgres.host }} {{ .Values.postgres.port }}; do
-                echo "Postgres is not ready, sleeping 2s..."
-                sleep 2
-              done
-              echo "Postgres is ready!"
+            [
+              "sh",
+              "-c",
+              "until nc -z -v -w30 {{ .Values.postgres.host | default 'stack-stack-postgres' }} {{ .Values.postgres.port }}; do echo 'Waiting for Postgres...'; sleep 5; done;"
+            ]
 
       containers:
         - name: backend
@@ -59,9 +53,9 @@ spec:
             {{- toYaml .Values.backend.resources | nindent 12 }}
           env:
             - name: DATABASE_HOST
-              value: "{{ .Values.postgres.host }}"
+              value: "{{ .Values.postgres.host | default 'stack-stack-postgres' }}"
             - name: DATABASE_PORT
-              value: "{{ .Values.postgres.port | quote }}"
+              value: "{{ .Values.postgres.port }}"
             - name: DATABASE_NAME
               value: "{{ .Values.postgres.database }}"
             - name: DATABASE_USERNAME
@@ -69,12 +63,8 @@ spec:
             - name: DATABASE_PASSWORD
               value: "{{ .Values.postgres.password }}"
             - name: DATABASE_SSL
-<<<<<<< HEAD
-              value: "{{ .Values.postgres.ssl | default "false" }}"   # ensures "false" is passed as string
-=======
-              value: "{{ .Values.postgres.ssl | ternary "true" "false" }}"   # explicitly converts bool to "true"/"false"
+              value: '{{ .Values.postgres.ssl | default "false" }}'
 
->>>>>>> 15b66d8 (Fix backend SSL and wait for Postgres before startup)
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
