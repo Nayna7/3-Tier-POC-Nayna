@@ -41,7 +41,7 @@ spec:
             {{- toYaml .Values.backend.resources | nindent 12 }}
           env:
             - name: DATABASE_HOST
-              value: "stack-postgres"
+              value: "stack-stack-postgres"
             - name: DATABASE_PORT
               value: "{{ .Values.postgres.port }}"
             - name: DATABASE_NAME
