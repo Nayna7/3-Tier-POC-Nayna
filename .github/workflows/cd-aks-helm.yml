@@ -37,4 +37,3 @@ jobs:
             --namespace stack \
             --values ./charts/stack/values.yaml \
             --wait
-
