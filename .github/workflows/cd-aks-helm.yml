@@ -3,7 +3,7 @@ name: CD - Helm Deploy to AKS
 on:
   push:
     paths:
-      - "stack/**"
+      - "charts/stack/**"
       - ".github/workflows/cd-aks-helm.yml"
 
 jobs:
