@@ -5,11 +5,11 @@ metadata:
   labels:
     {{- include "stack.frontend.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.frontend.service.type }}
-  ports:
-    - port: {{ .Values.frontend.service.port }}
-      targetPort: frontend
-      protocol: TCP
-      name: frontend
+  type: {{ .Values.frontend.service.type }}  # LoadBalancer
   selector:
     {{- include "stack.frontend.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: frontend
+      port: 80             # External/public port
+      targetPort: 1337     # Container port Strapi listens on
+      protocol: TCP
