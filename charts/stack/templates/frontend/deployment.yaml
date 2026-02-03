@@ -5,49 +5,28 @@ metadata:
   labels:
     {{- include "stack.frontend.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.frontend.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "stack.frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "stack.frontend.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "stack.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "stack.frontend.image" . }}
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          env:
+            - name: HOST
+              value: {{ .Values.frontend.env.HOST | quote }}
+            - name: PORT
+              value: {{ .Values.frontend.env.PORT | quote }}
           ports:
             - name: frontend
-              containerPort: {{ .Values.frontend.service.port }}
+              containerPort: {{ .Values.frontend.env.PORT }}
               protocol: TCP
           resources:
             {{- toYaml .Values.frontend.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
