@@ -17,7 +17,7 @@ postgres:
   username: admin
   password: admin
   port: 5432
-  ssl: false                  # must be boolean false, not string
+  ssl: false
 
 # =========================
 # BACKEND
@@ -70,11 +70,11 @@ frontend:
   
   service:
     type: LoadBalancer
-    port: 80
+    port: 80   # External port
 
   env:
-    HOST: "0.0.0.0"      # 🔹 Added to make Nuxt listen on all interfaces
-    PORT: "3000"         # 🔹 Added container port
+    HOST: "0.0.0.0"      # Make Nuxt listen on all interfaces
+    PORT: "3000"         # Container port
 
   resources: {}
 
