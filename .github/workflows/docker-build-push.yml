@@ -3,9 +3,7 @@ name: CI - Build & Push Docker Images
 on:
   push:
     branches:
-      - main
-    paths:
-      - "apps/backend/**"  
+      - main  
 jobs:
   build:
     runs-on: ubuntu-latest
