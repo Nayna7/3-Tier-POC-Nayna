@@ -39,5 +39,9 @@ spec:
             - name: DATABASE_PASSWORD
               value: "admin"
 
+            # 🔥 REQUIRED FOR STRAPI
+            - name: APP_KEYS
+              value: "a9f3k2,a83jd9,92kdla,0x91ka"
+
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
