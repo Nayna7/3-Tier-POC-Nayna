@@ -72,6 +72,10 @@ frontend:
     type: LoadBalancer
     port: 80
 
+  env:
+    HOST: "0.0.0.0"      # 🔹 Added to make Nuxt listen on all interfaces
+    PORT: "3000"         # 🔹 Added container port
+
   resources: {}
 
   ingress:
