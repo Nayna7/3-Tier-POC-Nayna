@@ -70,7 +70,7 @@ frontend:
   
   service:
     type: LoadBalancer
-    port: 1337
+    port: 80
 
   resources: {}
 
