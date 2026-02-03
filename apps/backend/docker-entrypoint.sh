@@ -19,7 +19,6 @@ if [ "$1" = "strapi" ]; then
       --dbname=$DATABASE_NAME \
       --dbusername=$DATABASE_USERNAME \
       --dbpassword=$DATABASE_PASSWORD \
-      --dbssl=$DATABASE_SSL \
       $EXTRA_ARGS
 
   elif [ ! -d "node_modules" ] || [ ! "$(ls -qAL node_modules 2>/dev/null)" ]; then
