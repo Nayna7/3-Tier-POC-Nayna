@@ -38,10 +38,6 @@ spec:
               value: "admin"
             - name: DATABASE_PASSWORD
               value: "admin"
-            - name: DATABASE_SSL
-              value: "false"
-            - name: DATABASE_SSL_REJECT_UNAUTHORIZED
-              value: "false"
 
           resources:
             {{- toYaml .Values.backend.resources | nindent 12 }}
