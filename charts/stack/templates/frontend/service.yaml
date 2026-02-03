@@ -11,5 +11,5 @@ spec:
   ports:
     - name: frontend
       port: 80             # External/public port
-      targetPort: 1337     # Container port Strapi listens on
+      targetPort: 3000     # Container port Strapi listens on
       protocol: TCP
